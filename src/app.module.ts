@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { PostModule } from './services/post/post.module';
+import { PrismaModule } from './services/prisma/prisma.module';
+import { UserModule } from './services/user/user.module';
 import { ConfigModule } from '@nestjs/config';
-import appConfig from './config/app.config';
-import { typeOrmAsyncConfig } from './config/typeOrm.config';
 
 @Module({
   imports: [
+    PrismaModule,
+    PostModule,
+    UserModule,
     ConfigModule.forRoot({
-      load: [appConfig],
       isGlobal: true,
+      envFilePath: '.env',
     }),
-    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
