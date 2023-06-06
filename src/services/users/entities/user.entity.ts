@@ -21,8 +21,22 @@ export class UserEntity implements User {
   name: string;
 
   @ApiProperty()
+  phone_number: string;
+
+  @ApiProperty()
   email: string;
+
+  @ApiProperty()
+  confirmed: boolean;
 
   @Exclude()
   password: string;
+}
+
+export class VerifyCodeEntity {
+  @ApiProperty()
+  accessToken: string;
+
+  @ApiProperty()
+  refreshToken: string;
 }

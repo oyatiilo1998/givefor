@@ -23,7 +23,7 @@ export class EmailController {
   @Post('html-email')
   async postHTMLEmail(@Body() mail: any) {
     const response = await this.mailService.sendMail({
-      to: 'sardor.abdurakhimov@itechart-group.com',
+      to: 'o.abdusattorov@ventionteams.com',
       from: 'oyatillo_abdusattorov@mail.ru',
       subject: 'HTML Dynamic Template',
       template: 'confirmation',

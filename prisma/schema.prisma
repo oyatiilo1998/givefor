@@ -16,6 +16,7 @@ model User {
   name  String?
   password String
   phone_number String
+  confirmed Boolean
   posts Post[]
 }
 
@@ -26,4 +27,11 @@ model Post {
   published Boolean? @default(false)
   author    User?    @relation(fields: [authorId], references: [id])
   authorId  Int?
+}
+
+model RegistrationCode {
+  email String
+  expires_at DateTime  @default(dbgenerated("NOW() + interval '1 minute'"))
+  code String
+  @@unique([email, code, expires_at])
 }

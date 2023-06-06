@@ -21,16 +21,44 @@ import {
 } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { EmailService } from 'src/pkg/email/email.service';
+import { SendgridService } from 'src/pkg/sendgrid/sendgrid.service';
 
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly emailService: EmailService,
+    private readonly sendgridService: SendgridService,
+  ) {}
 
   @Post()
   @ApiCreatedResponse({ type: UserEntity })
   async create(@Body() createUserDto: CreateUserDto) {
-    return new UserEntity(await this.usersService.create(createUserDto));
+    const resultUserCreate = await this.usersService.create(createUserDto);
+    console.log(resultUserCreate);
+    const code = Math.floor(100000 + Math.random() * 900000);
+    const mail = {
+      to: createUserDto.email,
+      subject: 'Greeting Message from NestJS Sendgrid',
+      from: 'oyatillo_abdusattorov@mail.ru',
+      text: 'Hello World from NestJS Sendgrid',
+      html: '<h1>Hello World from NestJS Sendgrid</h1>',
+    };
+    const resSendgrid = await this.sendgridService.send(mail);
+    console.log(resSendgrid, '$$$$$$$$$$$$');
+    const resultCodeCreate = await this.usersService.createCode({
+      email: createUserDto.email,
+      code: code.toString(),
+    });
+    const resultSendCode = this.emailService.sendCode({
+      toEmail: createUserDto.email,
+      name: createUserDto.name,
+      code: code.toString(),
+    });
+
+    return code;
   }
 
   @Get()
@@ -58,7 +86,22 @@ export class UsersController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return new UserEntity(await this.usersService.update(id, updateUserDto));
+    return new UserEntity(
+      await this.usersService.update(id, null, updateUserDto),
+    );
+  }
+
+  @Patch('password/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse({ type: UserEntity })
+  async updatePassword(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return new UserEntity(
+      await this.usersService.update(id, null, updateUserDto),
+    );
   }
 
   @Delete(':id')

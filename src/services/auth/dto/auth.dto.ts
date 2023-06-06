@@ -19,3 +19,10 @@ export class LoginDto {
   @ApiProperty()
   password: string;
 }
+
+export class ForgotPasswordDto {
+  @IsEmail()
+  @IsNotEmpty()
+  @ApiProperty()
+  email: string;
+}

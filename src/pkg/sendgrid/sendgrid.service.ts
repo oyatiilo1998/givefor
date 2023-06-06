@@ -5,7 +5,7 @@ import * as SendGrid from '@sendgrid/mail';
 @Injectable()
 export class SendgridService {
   constructor(private readonly configService: ConfigService) {
-    SendGrid.setApiKey(this.configService.get<string>('SENDGRID_KEY'));
+    SendGrid.setApiKey(this.configService.get<string>('SENDGRID_KEY_GMAIL'));
   }
   async send(mail: SendGrid.MailDataRequired) {
     const transport = await SendGrid.send(mail);

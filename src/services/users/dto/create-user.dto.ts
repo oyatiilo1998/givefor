@@ -1,7 +1,12 @@
 // src/users/dto/create-user.dto.ts
 
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MinLength } from '@nestjs/class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+} from '@nestjs/class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -12,7 +17,17 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
+  phone_number: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
   email: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  @ApiProperty()
+  confirmed: boolean;
 
   @IsString()
   @IsNotEmpty()

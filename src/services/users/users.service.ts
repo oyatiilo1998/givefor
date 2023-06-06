@@ -4,6 +4,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { VerifyCodeDto } from '../auth/dto/verify-code.dto';
 
 export const roundsOfHashing = 10;
 
@@ -17,6 +18,7 @@ export class UsersService {
       roundsOfHashing,
     );
 
+    createUserDto.confirmed = false;
     createUserDto.password = hashedPassword;
 
     return this.prisma.user.create({
@@ -28,11 +30,15 @@ export class UsersService {
     return this.prisma.user.findMany();
   }
 
+  findByEmail(email: string) {
+    return this.prisma.user.findUnique({ where: { email } });
+  }
+
   findOne(id: number) {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, email: string, updateUserDto: UpdateUserDto) {
     if (updateUserDto.password) {
       updateUserDto.password = await bcrypt.hash(
         updateUserDto.password,
@@ -40,9 +46,30 @@ export class UsersService {
       );
     }
 
+    if (email) {
+      return this.prisma.user.update({
+        where: { email },
+        data: updateUserDto,
+      });
+    }
+
     return this.prisma.user.update({
       where: { id },
       data: updateUserDto,
+    });
+  }
+
+  createCode(createCodeBody: any) {
+    return this.prisma.registrationCode.create({ data: createCodeBody });
+  }
+
+  verifyCode(verifyCodeDto: VerifyCodeDto) {
+    return this.prisma.registrationCode.findMany({
+      where: {
+        code: verifyCodeDto.code,
+        email: verifyCodeDto.email,
+        expires_at: { lte: new Date() },
+      },
     });
   }
 

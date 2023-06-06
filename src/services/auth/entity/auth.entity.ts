@@ -5,3 +5,11 @@ export class AuthEntity {
   @ApiProperty()
   accessToken: string;
 }
+
+export class VerifyCodeEntity {
+  @ApiProperty()
+  accessToken: string;
+
+  @ApiProperty()
+  refreshToken: string;
+}
