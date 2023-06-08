@@ -52,12 +52,12 @@ export class UsersController {
       email: createUserDto.email,
       code: code.toString(),
     });
-    const resultSendCode = this.emailService.sendCode({
+    const resultSendCode = await this.emailService.sendCode({
       toEmail: createUserDto.email,
       name: createUserDto.name,
       code: code.toString(),
     });
-
+    console.log(resultSendCode, ' %%%%%%%%%');
     return code;
   }
 

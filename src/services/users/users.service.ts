@@ -46,6 +46,8 @@ export class UsersService {
       );
     }
 
+    console.log(updateUserDto);
+
     if (email) {
       return this.prisma.user.update({
         where: { email },
@@ -64,11 +66,14 @@ export class UsersService {
   }
 
   verifyCode(verifyCodeDto: VerifyCodeDto) {
+    const now = new Date();
+    now.setTime(now.getTime() + 5 * 60 * 60 * 1000);
+
     return this.prisma.registrationCode.findMany({
       where: {
         code: verifyCodeDto.code,
         email: verifyCodeDto.email,
-        expires_at: { lte: new Date() },
+        expires_at: { gt: now },
       },
     });
   }

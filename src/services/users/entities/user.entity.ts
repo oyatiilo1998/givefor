@@ -32,11 +32,3 @@ export class UserEntity implements User {
   @Exclude()
   password: string;
 }
-
-export class VerifyCodeEntity {
-  @ApiProperty()
-  accessToken: string;
-
-  @ApiProperty()
-  refreshToken: string;
-}

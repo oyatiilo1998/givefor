@@ -41,9 +41,29 @@ export class AuthService {
       throw new UnauthorizedException('Invalid password');
     }
 
+    const expiresAtAccessToken = new Date();
+    expiresAtAccessToken.setTime(
+      expiresAtAccessToken.getTime() + 29 * 60 * 60 * 1000,
+    );
+
+    const expiresAtReshreshToken = new Date();
+    expiresAtReshreshToken.setTime(
+      expiresAtReshreshToken.getTime() +
+        30 * 24 * 60 * 60 * 1000 +
+        expiresAtReshreshToken.getTime() +
+        5 * 60 * 60 * 1000,
+    );
+
     // Step 3: Generate a JWT token containing the user's ID and return it
     return {
-      accessToken: this.jwtService.sign({ userId: user[0].id }),
+      accessToken: this.jwtService.sign({
+        user_id: user[0].id,
+        expiresAt: expiresAtAccessToken,
+      }),
+      refreshToken: this.jwtService.sign({
+        user_id: user[0].id,
+        expiresAt: expiresAtReshreshToken,
+      }),
     };
   }
 
@@ -53,9 +73,9 @@ export class AuthService {
       numbers: true,
     });
 
-    this.email.send({ toMail: email, password: password });
+    this.email.send({ toEmail: email, password: password });
 
-    let userDto: UpdateUserDto;
+    const userDto: UpdateUserDto = new UpdateUserDto();
     userDto.password = password;
 
     this.usersService.update(null, email, userDto);

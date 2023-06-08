@@ -35,12 +35,37 @@ export class AuthController {
   @ApiOkResponse({ type: VerifyCodeEntity })
   async verify(@Body() verifyCodeDto: VerifyCodeDto) {
     const result = await this.usersService.verifyCode(verifyCodeDto);
+    console.log(result);
     if (result.length > 0) {
-      let updateUserDto: UpdateUserDto;
+      const updateUserDto: UpdateUserDto = new UpdateUserDto();
       updateUserDto.confirmed = true;
+
       await this.usersService.update(null, result[0].email, updateUserDto);
       const user = await this.usersService.findByEmail(result[0].email);
-      return { accessToken: this.jwtService.sign({ user_id: user.id }) };
+
+      const expiresAtAccessToken = new Date();
+      expiresAtAccessToken.setTime(
+        expiresAtAccessToken.getTime() + 29 * 60 * 60 * 1000,
+      );
+
+      const expiresAtReshreshToken = new Date();
+      expiresAtReshreshToken.setTime(
+        expiresAtReshreshToken.getTime() +
+          30 * 24 * 60 * 60 * 1000 +
+          expiresAtReshreshToken.getTime() +
+          5 * 60 * 60 * 1000,
+      );
+
+      return {
+        accessToken: this.jwtService.sign({
+          user_id: user.id,
+          expiresAt: expiresAtAccessToken,
+        }),
+        refreshToken: this.jwtService.sign({
+          user_id: user.id,
+          expiresAt: expiresAtReshreshToken,
+        }),
+      };
     }
   }
 }
