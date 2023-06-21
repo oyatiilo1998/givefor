@@ -30,7 +30,6 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly emailService: EmailService,
-    private readonly sendgridService: SendgridService,
   ) {}
 
   @Post()

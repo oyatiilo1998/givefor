@@ -67,7 +67,7 @@ export class UsersService {
 
   verifyCode(verifyCodeDto: VerifyCodeDto) {
     const now = new Date();
-
+    console.log(now);
     return this.prisma.registrationCode.findMany({
       where: {
         code: verifyCodeDto.code,
