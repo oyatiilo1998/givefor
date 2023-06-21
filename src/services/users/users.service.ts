@@ -67,7 +67,6 @@ export class UsersService {
 
   verifyCode(verifyCodeDto: VerifyCodeDto) {
     const now = new Date();
-    now.setTime(now.getTime() + 5 * 60 * 60 * 1000);
 
     return this.prisma.registrationCode.findMany({
       where: {
