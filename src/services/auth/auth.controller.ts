@@ -66,15 +66,12 @@ export class AuthController {
 
       const expiresAtAccessToken = new Date();
       expiresAtAccessToken.setTime(
-        expiresAtAccessToken.getTime() + 29 * 60 * 60 * 1000,
+        expiresAtAccessToken.getTime() + 24 * 60 * 60 * 1000,
       );
 
       const expiresAtReshreshToken = new Date();
       expiresAtReshreshToken.setTime(
-        expiresAtReshreshToken.getTime() +
-          30 * 24 * 60 * 60 * 1000 +
-          expiresAtReshreshToken.getTime() +
-          5 * 60 * 60 * 1000,
+        expiresAtReshreshToken.getTime() + 30 * 24 * 60 * 60 * 1000,
       );
 
       return {
