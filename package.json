@@ -33,11 +33,13 @@
     "@prisma/client": "^4.14.1",
     "@sendgrid/mail": "^7.7.0",
     "bcrypt": "^5.1.0",
+    "email-templates": "^11.0.5",
     "generate-password": "^1.7.0",
     "handlebars": "^4.7.7",
     "nodemailer": "^6.9.3",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
+    "pug": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
   },

@@ -1,6 +1,7 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
+import { createTransport } from 'nodemailer';
 
 @Injectable()
 export class EmailService {
@@ -33,7 +34,8 @@ export class EmailService {
         mail: mail,
       },
     });
-    console.log(this.configService.get<string>('SENDGRID_EMAIL'));
+    console.log(response);
+
     return response;
   }
 }

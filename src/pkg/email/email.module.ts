@@ -7,10 +7,11 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
   imports: [
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.sendgrid.net',
+        host: 'live.smtp.mailtrap.io',
+        port: 2525,
         auth: {
-          user: 'apikey',
-          pass: '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',
+          user: 'api',
+          pass: '56dc7b2920759da9eafa36948d8cdb70',
         },
       },
       template: {

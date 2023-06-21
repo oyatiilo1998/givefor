@@ -39,57 +39,50 @@ export class UsersController {
     const resultUserCreate = await this.usersService.create(createUserDto);
     console.log(resultUserCreate);
     const code = Math.floor(100000 + Math.random() * 900000);
-    const mail = {
-      to: createUserDto.email,
-      subject: 'Greeting Message from NestJS Sendgrid',
-      from: 'oyatillo_abdusattorov@mail.ru',
-      text: 'Hello World from NestJS Sendgrid',
-      html: '<h1>Hello World from NestJS Sendgrid</h1>',
-    };
-    const resSendgrid = await this.sendgridService.send(mail);
-    console.log(resSendgrid, '$$$$$$$$$$$$');
+
     const resultCodeCreate = await this.usersService.createCode({
       email: createUserDto.email,
       code: code.toString(),
     });
+
     const resultSendCode = await this.emailService.sendCode({
       toEmail: createUserDto.email,
       name: createUserDto.name,
       code: code.toString(),
     });
-    console.log(resultSendCode, ' %%%%%%%%%');
+
     return code;
   }
 
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserEntity, isArray: true })
-  async findAll() {
-    const users = await this.usersService.findAll();
-    return users.map((user) => new UserEntity(user));
-  }
+  // @Get()
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
+  // @ApiOkResponse({ type: UserEntity, isArray: true })
+  // async findAll() {
+  //   const users = await this.usersService.findAll();
+  //   return users.map((user) => new UserEntity(user));
+  // }
 
-  @Get(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserEntity })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return new UserEntity(await this.usersService.findOne(id));
-  }
+  // @Get(':id')
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
+  // @ApiOkResponse({ type: UserEntity })
+  // async findOne(@Param('id', ParseIntPipe) id: number) {
+  //   return new UserEntity(await this.usersService.findOne(id));
+  // }
 
-  @Patch(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiCreatedResponse({ type: UserEntity })
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
-    return new UserEntity(
-      await this.usersService.update(id, null, updateUserDto),
-    );
-  }
+  // @Patch(':id')
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
+  // @ApiCreatedResponse({ type: UserEntity })
+  // async update(
+  //   @Param('id', ParseIntPipe) id: number,
+  //   @Body() updateUserDto: UpdateUserDto,
+  // ) {
+  //   return new UserEntity(
+  //     await this.usersService.update(id, null, updateUserDto),
+  //   );
+  // }
 
   @Patch('password/:id')
   @UseGuards(JwtAuthGuard)
@@ -104,11 +97,11 @@ export class UsersController {
     );
   }
 
-  @Delete(':id')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserEntity })
-  async remove(@Param('id', ParseIntPipe) id: number) {
-    return new UserEntity(await this.usersService.remove(id));
-  }
+  // @Delete(':id')
+  // @UseGuards(JwtAuthGuard)
+  // @ApiBearerAuth()
+  // @ApiOkResponse({ type: UserEntity })
+  // async remove(@Param('id', ParseIntPipe) id: number) {
+  //   return new UserEntity(await this.usersService.remove(id));
+  // }
 }
