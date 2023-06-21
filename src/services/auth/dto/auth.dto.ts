@@ -26,3 +26,10 @@ export class ForgotPasswordDto {
   @ApiProperty()
   email: string;
 }
+
+export class ResendCodeDto {
+  @IsEmail()
+  @IsNotEmpty()
+  @ApiProperty()
+  email: string;
+}

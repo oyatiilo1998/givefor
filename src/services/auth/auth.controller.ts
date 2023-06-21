@@ -4,17 +4,19 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthEntity, VerifyCodeEntity } from './entity/auth.entity';
-import { LoginDto, ForgotPasswordDto } from './dto/auth.dto';
+import { LoginDto, ForgotPasswordDto, ResendCodeDto } from './dto/auth.dto';
 import { UsersService } from '../users/users.service';
 import { VerifyCodeDto } from './dto/verify-code.dto';
 import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from '../users/dto/update-user.dto';
+import { EmailService } from 'src/pkg/email/email.service';
 
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
+    private readonly emailService: EmailService,
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
@@ -29,6 +31,25 @@ export class AuthController {
   @ApiOkResponse({ type: AuthEntity })
   forgotPassword(@Body() { email }: ForgotPasswordDto) {
     return this.authService.forgotPassword(email);
+  }
+
+  @Post('resend-code')
+  @ApiOkResponse()
+  async resnsedCode(@Body() { email }: ResendCodeDto) {
+    const code = Math.floor(100000 + Math.random() * 900000);
+    const resultCodeCreate = await this.usersService.createCode({
+      email: email,
+      code: code.toString(),
+    });
+
+    const user = await this.usersService.findByEmail(email);
+
+    const resultSendCode = await this.emailService.sendCode({
+      toEmail: email,
+      name: user.name,
+      code: code.toString(),
+    });
+    console.log(resultSendCode, 'send code result');
   }
 
   @Post('verify')
@@ -65,6 +86,10 @@ export class AuthController {
           user_id: user.id,
           expiresAt: expiresAtReshreshToken,
         }),
+      };
+    } else {
+      return {
+        error: 'passcode expired or user not registered yet',
       };
     }
   }

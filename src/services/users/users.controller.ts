@@ -51,7 +51,7 @@ export class UsersController {
       code: code.toString(),
     });
 
-    return code;
+    return;
   }
 
   // @Get()
